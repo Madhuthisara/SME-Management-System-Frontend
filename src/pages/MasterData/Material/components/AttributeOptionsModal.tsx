@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Table, Button, Form, Input, Space, message, Typography, Dropdown } from 'antd';
+import { Modal, Table, Button, Form, Input, message, Typography, Dropdown } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, MoreOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { attributeService } from '../../../../api/services/attributeService';

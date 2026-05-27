@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Card, Row, Col, Space, theme } from 'antd';
+import { Typography, Card, Row, Col, theme } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import {
     LinkOutlined,
@@ -33,7 +33,7 @@ interface MenuSection {
 const MasterData: React.FC = () => {
     const navigate = useNavigate();
     const {
-        token: { colorPrimary, colorBgContainer, borderRadiusLG },
+        token: { colorPrimary, borderRadiusLG },
     } = theme.useToken();
 
     const sections: MenuSection[] = [

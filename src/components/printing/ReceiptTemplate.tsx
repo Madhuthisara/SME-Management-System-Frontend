@@ -1,9 +1,9 @@
 import React from 'react';
-import { Space, Typography, Divider } from 'antd';
+import { Typography } from 'antd';
 import dayjs from 'dayjs';
 import { Order } from '../../types/order';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 interface ReceiptTemplateProps {
     order: Order;

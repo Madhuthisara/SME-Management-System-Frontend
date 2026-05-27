@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Typography, Table, Button, Modal, Form, Input, Dropdown, message, Upload, Switch, InputNumber } from 'antd';
-import { MoreOutlined, EditOutlined, DeleteOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { MoreOutlined, EditOutlined, DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import MasterDataSubPageLayout from '../../../components/common/MasterDataSubPageLayout';
@@ -17,10 +17,12 @@ const HeroSections: React.FC = () => {
     const [isUploading, setIsUploading] = useState(false);
 
     // Load available hero sections
-    const { data: heroes = [], isLoading: isHeroesLoading } = useQuery({
+    const { data: heroesResponse, isLoading: isHeroesLoading } = useQuery({
         queryKey: ['heroes'],
-        queryFn: heroService.getAllHeroes,
+        queryFn: () => heroService.getAllHeroes(),
     });
+
+    const heroes = (heroesResponse as any)?.values ?? heroesResponse ?? [];
 
     // Save new hero section
     const createMutation = useMutation({

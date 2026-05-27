@@ -11,8 +11,7 @@ import {
 } from 'antd';
 import {
     SearchOutlined,
-    FilterOutlined,
-    CalendarOutlined
+    FilterOutlined
 } from '@ant-design/icons';
 import { OrderStatus, CustomOrderStatus } from '../../types/order';
 import dayjs from 'dayjs';

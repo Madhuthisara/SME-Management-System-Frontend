@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Steps, Card, Typography, message, theme } from 'antd';
-import { UserOutlined, MailOutlined, PhoneOutlined, LockOutlined, ShopOutlined, EnvironmentOutlined, FileTextOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Steps, Card, Typography } from 'antd';
+import { UserOutlined, MailOutlined, PhoneOutlined, LockOutlined, ShopOutlined, FileTextOutlined } from '@ant-design/icons';
 import { useNavigate, Link } from 'react-router-dom';
 
 import { useMutation } from '@tanstack/react-query';

@@ -12,16 +12,14 @@ import {
     Input,
     Select,
     InputNumber,
-    Space,
     message,
     Alert,
     Tooltip
 } from 'antd';
-import { CopyOutlined } from '@ant-design/icons';
 import usePaymentSettings from '../../hooks/usePaymentSettings';
-import type { GatewayName, SavePaymentSettingPayload, PaymentSetting } from '../../api/services/paymentSettingsService';
+import type { GatewayName, SavePaymentSettingPayload } from '../../api/services/paymentSettingsService';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text } = Typography;
 const { Option } = Select;
 
 interface Props {

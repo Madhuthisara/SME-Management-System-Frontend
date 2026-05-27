@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Typography, Table, Button, Modal, Form, Input, Dropdown, ColorPicker, Tag, message, Spin } from 'antd';
-import { MoreOutlined, EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { MoreOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import MasterDataSubPageLayout from '../../../components/common/MasterDataSubPageLayout';
