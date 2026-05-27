@@ -2,8 +2,10 @@ import axios from 'axios';
 import { message } from 'antd';
 
 // Set up axios with base URL and default headers
+const baseURL = process.env.REACT_APP_API_URL || process.env.VITE_API_BASE_URL;
+
 const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || process.env.VITE_API_BASE_URL,
+    baseURL: baseURL,
     headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true',
@@ -58,6 +60,9 @@ axiosInstance.interceptors.response.use(
 
             // If unauthorized, clear session and go to login
             if (response.status === 401) {
+                console.error("Unauthorized request (401) to:", config.url);
+                console.log("Clearing localStorage and redirecting to login...");
+
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
 

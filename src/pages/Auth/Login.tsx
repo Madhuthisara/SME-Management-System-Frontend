@@ -17,14 +17,25 @@ const Login: React.FC = () => {
     const { mutate: login, isPending } = useMutation({
         mutationFn: authService.login,
         onSuccess: (response) => {
+            console.log("Login API Response:", response);
             // response is the body returned by authService.login (response.data from axios)
-            const { output } = response;
-            if (output && output.access_token) {
-                setLocalStorageData("token", output.access_token);
+
+            // Handle both standardized { output: { ... } } and direct structures
+            const data = response.output || response;
+
+            if (data && (data.access_token || data.token)) {
+                const token = data.access_token || data.token;
+                setLocalStorageData("token", token);
+                console.log("Token saved to localStorage");
+            } else {
+                console.warn("No token found in login response structure");
             }
-            if (output && output.user) {
-                setLocalStorageData("user", output.user);
+
+            if (data && data.user) {
+                setLocalStorageData("user", data.user);
+                console.log("User data saved to localStorage");
             }
+
             navigate(from, { replace: true });
         },
 
