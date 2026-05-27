@@ -1,0 +1,22 @@
+/**
+ * Common CSS Colors - Design System
+ * 
+ * This file defines common color variables used throughout the application.
+ */
+
+:root {
+    /* Primary Text Color - Black */
+    --color-common-primary: #000000;
+
+    /* Secondary - Dark Gray */
+    --color-common-secondary: #333333;
+
+    /* Third - Medium Gray */
+    --color-common-third: #666666;
+
+    /* Fourth - Light Gray */
+    --color-common-fourth: #999999;
+
+    /* Fifth - Extra Light Gray */
+    --color-common-fifth: #cccccc;
+}

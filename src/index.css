@@ -1,0 +1,57 @@
+/* Import CSS Variables - Design System */
+@import './styles/variables.css';
+@import './styles/common.css';
+@import './styles/utility-classes.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Global Print Styles */
+@media print {
+
+  /* Hide all direct children of body EXCEPT the print section */
+  body>*:not(#print-section) {
+    display: none !important;
+  }
+
+  /* Show and position the print section */
+  body>#print-section {
+    display: block !important;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Reset page margins and settings */
+  @page {
+    margin: 0;
+    size: auto;
+    /* Allow component to define size */
+  }
+
+  /* Force background colors and colors to print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* Hide print section by default on screen */
+#print-section {
+  display: none;
+}

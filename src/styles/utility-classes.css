@@ -1,0 +1,310 @@
+/**
+ * Custom Utility Classes
+ * 
+ * These utility classes use our CSS variables and can be used
+ * throughout the application for consistent styling.
+ */
+
+/* ============================================
+   TEXT UTILITIES
+   ============================================ */
+.text-primary {
+    color: var(--color-text-primary);
+}
+
+.text-secondary {
+    color: var(--color-text-secondary);
+}
+
+.text-tertiary {
+    color: var(--color-text-tertiary);
+}
+
+.text-disabled {
+    color: var(--color-text-disabled);
+}
+
+/* ============================================
+   BACKGROUND UTILITIES
+   ============================================ */
+.bg-base {
+    background-color: var(--color-bg-base);
+}
+
+.bg-container {
+    background-color: var(--color-bg-container);
+}
+
+.bg-layout {
+    background-color: var(--color-bg-layout);
+}
+
+.bg-primary {
+    background-color: var(--color-primary);
+}
+
+.bg-primary-light {
+    background-color: var(--color-primary-light);
+}
+
+/* ============================================
+   BORDER UTILITIES
+   ============================================ */
+.border-primary {
+    border-color: var(--color-border-primary);
+}
+
+.border-secondary {
+    border-color: var(--color-border-secondary);
+}
+
+.rounded-sm {
+    border-radius: var(--border-radius-sm);
+}
+
+.rounded-base {
+    border-radius: var(--border-radius-base);
+}
+
+.rounded-md {
+    border-radius: var(--border-radius-md);
+}
+
+.rounded-lg {
+    border-radius: var(--border-radius-lg);
+}
+
+/* ============================================
+   SHADOW UTILITIES
+   ============================================ */
+.shadow-sm {
+    box-shadow: var(--shadow-sm);
+}
+
+.shadow-base {
+    box-shadow: var(--shadow-base);
+}
+
+.shadow-lg {
+    box-shadow: var(--shadow-lg);
+}
+
+/* ============================================
+   SPACING UTILITIES
+   ============================================ */
+.p-xs {
+    padding: var(--spacing-xs);
+}
+
+.p-sm {
+    padding: var(--spacing-sm);
+}
+
+.p-md {
+    padding: var(--spacing-md);
+}
+
+.p-lg {
+    padding: var(--spacing-lg);
+}
+
+.p-xl {
+    padding: var(--spacing-xl);
+}
+
+.m-xs {
+    margin: var(--spacing-xs);
+}
+
+.m-sm {
+    margin: var(--spacing-sm);
+}
+
+.m-md {
+    margin: var(--spacing-md);
+}
+
+.m-lg {
+    margin: var(--spacing-lg);
+}
+
+.m-xl {
+    margin: var(--spacing-xl);
+}
+
+/* Padding - Individual sides */
+.pt-xs {
+    padding-top: var(--spacing-xs);
+}
+
+.pt-sm {
+    padding-top: var(--spacing-sm);
+}
+
+.pt-md {
+    padding-top: var(--spacing-md);
+}
+
+.pt-lg {
+    padding-top: var(--spacing-lg);
+}
+
+.pt-xl {
+    padding-top: var(--spacing-xl);
+}
+
+.pb-xs {
+    padding-bottom: var(--spacing-xs);
+}
+
+.pb-sm {
+    padding-bottom: var(--spacing-sm);
+}
+
+.pb-md {
+    padding-bottom: var(--spacing-md);
+}
+
+.pb-lg {
+    padding-bottom: var(--spacing-lg);
+}
+
+.pb-xl {
+    padding-bottom: var(--spacing-xl);
+}
+
+.pl-xs {
+    padding-left: var(--spacing-xs);
+}
+
+.pl-sm {
+    padding-left: var(--spacing-sm);
+}
+
+.pl-md {
+    padding-left: var(--spacing-md);
+}
+
+.pl-lg {
+    padding-left: var(--spacing-lg);
+}
+
+.pl-xl {
+    padding-left: var(--spacing-xl);
+}
+
+.pr-xs {
+    padding-right: var(--spacing-xs);
+}
+
+.pr-sm {
+    padding-right: var(--spacing-sm);
+}
+
+.pr-md {
+    padding-right: var(--spacing-md);
+}
+
+.pr-lg {
+    padding-right: var(--spacing-lg);
+}
+
+.pr-xl {
+    padding-right: var(--spacing-xl);
+}
+
+/* Margin - Individual sides */
+.mt-xs {
+    margin-top: var(--spacing-xs);
+}
+
+.mt-sm {
+    margin-top: var(--spacing-sm);
+}
+
+.mt-md {
+    margin-top: var(--spacing-md);
+}
+
+.mt-lg {
+    margin-top: var(--spacing-lg);
+}
+
+.mt-xl {
+    margin-top: var(--spacing-xl);
+}
+
+.mb-xs {
+    margin-bottom: var(--spacing-xs);
+}
+
+.mb-sm {
+    margin-bottom: var(--spacing-sm);
+}
+
+.mb-md {
+    margin-bottom: var(--spacing-md);
+}
+
+.mb-lg {
+    margin-bottom: var(--spacing-lg);
+}
+
+.mb-xl {
+    margin-bottom: var(--spacing-xl);
+}
+
+.ml-xs {
+    margin-left: var(--spacing-xs);
+}
+
+.ml-sm {
+    margin-left: var(--spacing-sm);
+}
+
+.ml-md {
+    margin-left: var(--spacing-md);
+}
+
+.ml-lg {
+    margin-left: var(--spacing-lg);
+}
+
+.ml-xl {
+    margin-left: var(--spacing-xl);
+}
+
+.mr-xs {
+    margin-right: var(--spacing-xs);
+}
+
+.mr-sm {
+    margin-right: var(--spacing-sm);
+}
+
+.mr-md {
+    margin-right: var(--spacing-md);
+}
+
+.mr-lg {
+    margin-right: var(--spacing-lg);
+}
+
+.mr-xl {
+    margin-right: var(--spacing-xl);
+}
+
+/* ============================================
+   TRANSITION UTILITIES
+   ============================================ */
+.transition-fast {
+    transition: all var(--transition-fast) var(--transition-ease);
+}
+
+.transition-base {
+    transition: all var(--transition-base) var(--transition-ease);
+}
+
+.transition-slow {
+    transition: all var(--transition-slow) var(--transition-ease);
+}
