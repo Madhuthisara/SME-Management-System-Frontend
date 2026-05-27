@@ -1,4 +1,5 @@
 import { Product } from './product';
+import { PaginatedData } from './pagination';
 
 export interface CustomOrderStatus {
     id: string;
@@ -92,7 +93,6 @@ export interface UpdateOrderStatusPayload {
     notes?: string;
 }
 
-import { PaginatedData } from './pagination';
 
 export interface OrdersListResponse {
     success: boolean;

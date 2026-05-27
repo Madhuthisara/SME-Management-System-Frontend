@@ -1,5 +1,6 @@
 import axiosInstance from '../axiosInstance';
 import { API_ENDPOINTS } from '../endpoints';
+import { PaginatedData } from '../../types/pagination';
 
 export interface OrderStatusData {
     id: string;
@@ -10,7 +11,6 @@ export interface OrderStatusData {
     updated_at: string;
 }
 
-import { PaginatedData } from '../../types/pagination';
 
 export interface OrderStatusResponse {
     success: boolean;
