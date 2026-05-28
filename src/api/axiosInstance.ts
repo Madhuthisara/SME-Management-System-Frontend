@@ -6,9 +6,10 @@ const baseURL = process.env.REACT_APP_API_URL || process.env.VITE_API_BASE_URL;
 
 const axiosInstance = axios.create({
     baseURL: baseURL,
-    withCredentials: false,
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'ngrok-skip-browser-warning': 'true',
     },
 });
@@ -18,6 +19,7 @@ axiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
 
+        // Validation for valid token format
         if (token && token !== 'null' && token !== 'undefined' && token !== 'true' && token !== 'false') {
             config.headers.Authorization = `Bearer ${token}`;
             console.log(`[Axios] Added valid JWT token to request: ${config.url}`);
@@ -65,12 +67,12 @@ axiosInstance.interceptors.response.use(
             if (response.status === 401) {
                 console.error("Unauthorized request (401) to:", config.url);
 
-                if (config.url?.includes('api/auth/login')) {
+                if (config.url?.includes('api/auth/login') || config.url?.endsWith('/login')) {
                     console.log("401 came from login endpoint itself, skipping redirect loop.");
                     return Promise.reject(error);
                 }
+                console.log("Clearing localStorage due to 401. Current Token was:", localStorage.getItem('token'));
 
-                console.log("Clearing localStorage due to 401 and redirecting to login...");
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
 
