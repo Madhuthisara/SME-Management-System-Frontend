@@ -21,7 +21,6 @@ axiosInstance.interceptors.request.use(
             config.headers.Authorization = `Bearer ${token}`;
             console.log(`[Axios] Added token to request: ${config.url}`);
         } else {
-            // If in session mode (withCredentials: true), we might skip this purposefully
             if (!config.withCredentials) {
                 console.warn(`[Axios] No token found for non-credentialed request: ${config.url}`);
             }
