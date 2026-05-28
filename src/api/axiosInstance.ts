@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
     baseURL: baseURL,
     // Keep withCredentials false by default. 
     // If you use CORS wildcards ('*') in Laravel cors.php, setting this to true will cause a "Network Error".
-    withCredentials: false,
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true',
