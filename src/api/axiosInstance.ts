@@ -6,9 +6,7 @@ const baseURL = process.env.REACT_APP_API_URL || process.env.VITE_API_BASE_URL;
 
 const axiosInstance = axios.create({
     baseURL: baseURL,
-    // Keep withCredentials false by default. 
-    // If you use CORS wildcards ('*') in Laravel cors.php, setting this to true will cause a "Network Error".
-    withCredentials: true,
+    withCredentials: false,
     headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true',
@@ -19,11 +17,14 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
-        if (token) {
+        if (token && token !== 'null' && token !== 'undefined') {
             config.headers.Authorization = `Bearer ${token}`;
             console.log(`[Axios] Added token to request: ${config.url}`);
         } else {
-            console.warn(`[Axios] No token found in localStorage for request: ${config.url}`);
+            // If in session mode (withCredentials: true), we might skip this purposefully
+            if (!config.withCredentials) {
+                console.warn(`[Axios] No token found for non-credentialed request: ${config.url}`);
+            }
         }
 
         // Use correct content type for file uploads

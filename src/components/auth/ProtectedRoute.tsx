@@ -12,16 +12,18 @@ interface ProtectedRouteProps {
  */
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const token = getLocalStorageData<string>('token');
+    const user = getLocalStorageData<any>('user');
     const location = useLocation();
 
-    console.log(`[ProtectedRoute] Checking token for path: ${location.pathname}`);
-    if (!token) {
-        console.warn("[ProtectedRoute] No token found! Redirecting to /login");
-        // Redirect to login but save the current location so we can come back
+    console.log(`[ProtectedRoute] Checking auth for path: ${location.pathname}`);
+
+    // Pass if we have a token OR a user object (which might indicate a valid session)
+    if (!token && !user) {
+        console.warn("[ProtectedRoute] No token or user found! Redirecting to /login");
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    console.log("[ProtectedRoute] Token found. Access granted.");
+    console.log(`[ProtectedRoute] Access granted via ${token ? 'token' : 'session/user'}`);
     return <>{children}</>;
 };
 
