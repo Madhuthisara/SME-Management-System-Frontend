@@ -17,12 +17,13 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
-        if (token && token !== 'null' && token !== 'undefined') {
+
+        if (token && token !== 'null' && token !== 'undefined' && token !== 'true' && token !== 'false') {
             config.headers.Authorization = `Bearer ${token}`;
-            console.log(`[Axios] Added token to request: ${config.url}`);
+            console.log(`[Axios] Added valid JWT token to request: ${config.url}`);
         } else {
             if (!config.withCredentials) {
-                console.warn(`[Axios] No token found for non-credentialed request: ${config.url}`);
+                console.warn(`[Axios] No valid JWT token found for request: ${config.url}. Current token value:`, token);
             }
         }
 
@@ -42,14 +43,12 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     (response) => {
         const config = response.config as any;
-        // Show success message if requested
         if (config._showSuccessMessage && response.data && response.data.message) {
             message.success(response.data.message);
         }
         return response;
     },
     (error) => {
-        // Don't show error if the request was cancelled
         if (axios.isCancel(error)) {
             return Promise.reject(error);
         }
@@ -58,17 +57,20 @@ axiosInstance.interceptors.response.use(
         const customConfig = config as any;
 
         if (response) {
-            // Show error message from API unless disabled
             if (customConfig._showErrorMessage !== false) {
                 const errorMessage = response.data?.message || 'Something went wrong';
                 message.error(errorMessage);
             }
 
-            // If unauthorized, clear session and go to login
             if (response.status === 401) {
                 console.error("Unauthorized request (401) to:", config.url);
-                console.log("Clearing localStorage and redirecting to login...");
 
+                if (config.url?.includes('api/auth/login')) {
+                    console.log("401 came from login endpoint itself, skipping redirect loop.");
+                    return Promise.reject(error);
+                }
+
+                console.log("Clearing localStorage due to 401 and redirecting to login...");
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
 
@@ -77,13 +79,11 @@ axiosInstance.interceptors.response.use(
                 }
             }
         } else {
-            // Handle network connection issues or CORS blocks
             const isAborted = error.code === 'ERR_CANCELED' || error.name === 'CanceledError';
 
             if (customConfig?._showErrorMessage !== false && !isAborted) {
                 if (error.message === 'Network Error') {
                     message.error('Network error / CORS block. Please check if the server is running and CORS is configured correctly.');
-                    console.error('Network Error detected. This is often caused by CORS issues when withCredentials is mismatched with Access-Control-Allow-Origin.');
                 } else {
                     message.error('Network error. Please check your connection.');
                 }
