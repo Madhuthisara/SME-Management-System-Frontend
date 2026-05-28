@@ -21,6 +21,9 @@ axiosInstance.interceptors.request.use(
         const token = localStorage.getItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
+            console.log(`[Axios] Added token to request: ${config.url}`);
+        } else {
+            console.warn(`[Axios] No token found in localStorage for request: ${config.url}`);
         }
 
         // Use correct content type for file uploads

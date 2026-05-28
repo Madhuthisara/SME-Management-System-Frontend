@@ -19,29 +19,33 @@ const Login: React.FC = () => {
         onSuccess: (response) => {
             console.log("Login API Response:", response);
 
-            // Handle various structures: { output: { ... } }, { data: { ... } }, or direct
-            // Ensure we don't pick 'null' if output is present but null
-            const data = (response.output !== null && response.output !== undefined)
-                ? response.output
-                : (response.data || response);
+            // Exhaustive search for token and user
+            const raw = response;
+            const output = response.output;
+            const data = response.data;
+
+            const token = raw?.access_token || raw?.token ||
+                output?.access_token || output?.token ||
+                data?.access_token || data?.token;
+
+            const user = raw?.user || output?.user || data?.user;
 
             let tokenSaved = false;
-            if (data && (data.access_token || data.token)) {
-                const token = data.access_token || data.token;
+            console.log("[Login] Token found in parsing:", !!token);
+            console.log("[Login] User found in parsing:", !!user);
+
+            if (token) {
                 setLocalStorageData("token", token);
-                console.log("Token successfully saved to localStorage");
+                console.log("[Login] Token successfully saved to localStorage");
                 tokenSaved = true;
             } else {
-                console.warn("No token found in login response structure. This might be normal for session-based auth.");
-                console.log("Structure analyzed:", JSON.stringify(data).substring(0, 200));
+                console.warn("[Login] No token found in any expected field (raw, output, or data)");
+                console.log("[Login] Full response structure:", JSON.stringify(response).substring(0, 300));
             }
 
-            if (data && data.user) {
-                setLocalStorageData("user", data.user);
-                console.log("User data saved to localStorage");
-            } else if (data && data.data && data.data.user) {
-                setLocalStorageData("user", data.data.user);
-                console.log("User data saved from nested structure");
+            if (user) {
+                setLocalStorageData("user", user);
+                console.log("[Login] User data saved to localStorage");
             }
 
             // Navigate if success is true OR if we saved a token

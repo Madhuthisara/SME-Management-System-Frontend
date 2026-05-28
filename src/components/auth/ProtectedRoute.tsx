@@ -14,11 +14,14 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const token = getLocalStorageData<string>('token');
     const location = useLocation();
 
+    console.log(`[ProtectedRoute] Checking token for path: ${location.pathname}`);
     if (!token) {
+        console.warn("[ProtectedRoute] No token found! Redirecting to /login");
         // Redirect to login but save the current location so we can come back
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
+    console.log("[ProtectedRoute] Token found. Access granted.");
     return <>{children}</>;
 };
 
