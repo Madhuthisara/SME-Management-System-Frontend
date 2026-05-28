@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import { getLocalStorageData } from '../../utils/storage';
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
@@ -10,7 +11,7 @@ interface ProtectedRouteProps {
  * If not, it redirects them to the login page.
  */
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-    const token = localStorage.getItem('token');
+    const token = getLocalStorageData<string>('token');
     const location = useLocation();
 
     if (!token) {

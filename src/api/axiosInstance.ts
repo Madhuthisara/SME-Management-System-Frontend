@@ -6,6 +6,9 @@ const baseURL = process.env.REACT_APP_API_URL || process.env.VITE_API_BASE_URL;
 
 const axiosInstance = axios.create({
     baseURL: baseURL,
+    // Keep withCredentials false by default. 
+    // If you use CORS wildcards ('*') in Laravel cors.php, setting this to true will cause a "Network Error".
+    withCredentials: false,
     headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true',
@@ -71,11 +74,16 @@ axiosInstance.interceptors.response.use(
                 }
             }
         } else {
-            // Handle network connection issues
+            // Handle network connection issues or CORS blocks
             const isAborted = error.code === 'ERR_CANCELED' || error.name === 'CanceledError';
 
             if (customConfig?._showErrorMessage !== false && !isAborted) {
-                message.error('Network error. Please check your connection.');
+                if (error.message === 'Network Error') {
+                    message.error('Network error / CORS block. Please check if the server is running and CORS is configured correctly.');
+                    console.error('Network Error detected. This is often caused by CORS issues when withCredentials is mismatched with Access-Control-Allow-Origin.');
+                } else {
+                    message.error('Network error. Please check your connection.');
+                }
             }
         }
 

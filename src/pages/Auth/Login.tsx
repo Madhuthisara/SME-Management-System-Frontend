@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, Card, Typography } from "antd";
+import { Form, Input, Button, Card, Typography, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
@@ -18,25 +18,43 @@ const Login: React.FC = () => {
         mutationFn: authService.login,
         onSuccess: (response) => {
             console.log("Login API Response:", response);
-            // response is the body returned by authService.login (response.data from axios)
 
-            // Handle both standardized { output: { ... } } and direct structures
-            const data = response.output || response;
+            // Handle various structures: { output: { ... } }, { data: { ... } }, or direct
+            // Ensure we don't pick 'null' if output is present but null
+            const data = (response.output !== null && response.output !== undefined)
+                ? response.output
+                : (response.data || response);
 
+            let tokenSaved = false;
             if (data && (data.access_token || data.token)) {
                 const token = data.access_token || data.token;
                 setLocalStorageData("token", token);
-                console.log("Token saved to localStorage");
+                console.log("Token successfully saved to localStorage");
+                tokenSaved = true;
             } else {
-                console.warn("No token found in login response structure");
+                console.warn("No token found in login response structure. This might be normal for session-based auth.");
+                console.log("Structure analyzed:", JSON.stringify(data).substring(0, 200));
             }
 
             if (data && data.user) {
                 setLocalStorageData("user", data.user);
                 console.log("User data saved to localStorage");
+            } else if (data && data.data && data.data.user) {
+                setLocalStorageData("user", data.data.user);
+                console.log("User data saved from nested structure");
             }
 
-            navigate(from, { replace: true });
+            // Navigate if success is true OR if we saved a token
+            if (response.success || tokenSaved) {
+                message.success(response.message || "Login successful!");
+                console.log(`Login successful. Navigating to ${from}...`);
+                setTimeout(() => {
+                    navigate(from, { replace: true });
+                }, 100);
+            } else {
+                console.error("Login failed: Backend response indicated failure and no token was provided.");
+                message.error("Login failed. Please check your credentials.");
+            }
         },
 
     });
