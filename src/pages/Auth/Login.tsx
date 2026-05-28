@@ -19,27 +19,22 @@ const Login: React.FC = () => {
         onSuccess: (response) => {
             console.log("Login API Response:", response);
 
-            // Exhaustive search for token and user
-            const raw = response;
-            const output = response.output;
-            const data = response.data;
+            const apiResponse = response?.data && response?.success === undefined ? response.data : response;
 
-            const token = raw?.access_token || raw?.token ||
-                output?.access_token || output?.token ||
-                data?.access_token || data?.token;
-
-            const user = raw?.user || output?.user || data?.user;
+            console.log("Extracted API Response:", apiResponse);
+            const token = apiResponse?.data?.token || apiResponse?.token || apiResponse?.access_token;
+            const user = apiResponse?.data?.user || apiResponse?.user;
 
             let tokenSaved = false;
             console.log("[Login] Token found in parsing:", !!token);
             console.log("[Login] User found in parsing:", !!user);
 
-            if (token) {
+            if (token && token !== true && token !== "true") {
                 setLocalStorageData("token", token);
                 console.log("[Login] Token successfully saved to localStorage");
                 tokenSaved = true;
             } else {
-                console.warn("[Login] No token found in any expected field (raw, output, or data)");
+                console.warn("[Login] No valid token string found. Got:", token);
                 console.log("[Login] Full response structure:", JSON.stringify(response).substring(0, 300));
             }
 
@@ -47,22 +42,22 @@ const Login: React.FC = () => {
                 setLocalStorageData("user", user);
                 console.log("[Login] User data saved to localStorage");
             }
-
-            // Navigate if success is true OR if we saved a token
-            if (response.success || tokenSaved) {
-                message.success(response.message || "Login successful!");
+            if (apiResponse?.success || tokenSaved) {
+                message.success(apiResponse?.message || "Login successful!");
                 console.log(`Login successful. Navigating to ${from}...`);
                 setTimeout(() => {
                     navigate(from, { replace: true });
                 }, 100);
             } else {
                 console.error("Login failed: Backend response indicated failure and no token was provided.");
-                message.error("Login failed. Please check your credentials.");
+                message.error(apiResponse?.message || "Login failed. Please check your credentials.");
             }
         },
-
+        onError: (error) => {
+            console.error("Login Mutation Error:", error);
+            message.error("An error occurred during login. Please try again.");
+        }
     });
-
 
     const onFinish = (values: any) => {
         login(values);
