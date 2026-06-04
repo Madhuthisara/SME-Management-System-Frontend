@@ -20,17 +20,17 @@ export type HeroSectionInput = Omit<HeroSection, 'id' | 'created_at' | 'updated_
 export const heroService = {
     getAllHeroes: async (page: number = 1, perPage: number = 15): Promise<PaginatedData<HeroSection>> => {
         const response = await axiosInstance.get(`${API_ENDPOINTS.HEROES.ALL}?page=${page}&per_page=${perPage}`);
-        return response.data.data;
+        return response.data.output || response.data.data;
     },
 
     createHero: async (data: HeroSectionInput): Promise<HeroSection> => {
         const response = await axiosInstance.post(API_ENDPOINTS.HEROES.CREATE, data);
-        return response.data.data;
+        return response.data.output || response.data.data;
     },
 
     updateHero: async (id: number | string, data: Partial<HeroSectionInput>): Promise<HeroSection> => {
         const response = await axiosInstance.put(API_ENDPOINTS.HEROES.UPDATE(id), data);
-        return response.data.data;
+        return response.data.output || response.data.data;
     },
 
     deleteHero: async (id: number | string): Promise<void> => {
