@@ -20,7 +20,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { orderService } from '../../api/services/orderService';
 import { orderStatusService } from '../../api/services/orderStatusService';
 import { Order, OrderStatus, OrderSource, PaymentMethod } from '../../types/order';
-import { getLocalStorageData } from '../../utils/storage';
+import { profileService } from '../../api/services/profileService';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import AddOrderModal from '../../components/orders/AddOrderModal';
@@ -36,8 +36,13 @@ const { Title, Text } = Typography;
 
 const OrderList: React.FC = () => {
     const queryClient = useQueryClient();
-    const user = getLocalStorageData<any>('user') || {};
-    const businessId = user.business_id;
+
+    // Fetch business ID from Profile API (standardized pattern)
+    const { data: profileResponse } = useQuery({
+        queryKey: ['profile'],
+        queryFn: profileService.getProfile,
+    });
+    const businessId = profileResponse?.output?.business?.id?.toString();
 
     const [statusFilter, setStatusFilter] = useState<string>('all');
     const [searchText, setSearchText] = useState('');
@@ -53,7 +58,7 @@ const OrderList: React.FC = () => {
     // Data Fetching
     const { data: ordersData, isLoading } = useQuery({
         queryKey: ['orders', businessId, page, pageSize],
-        queryFn: () => orderService.getAllOrders(businessId, page, pageSize),
+        queryFn: () => orderService.getAllOrders(businessId!, page, pageSize),
         enabled: !!businessId,
     });
 
@@ -65,7 +70,7 @@ const OrderList: React.FC = () => {
 
     const { data: customStatusesData } = useQuery({
         queryKey: ['order-statuses', businessId],
-        queryFn: () => orderStatusService.getAll(businessId),
+        queryFn: () => orderStatusService.getAll(businessId!),
         enabled: !!businessId,
     });
 
