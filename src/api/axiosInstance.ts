@@ -2,7 +2,9 @@ import axios from 'axios';
 import { message } from 'antd';
 
 // Set up axios with base URL and default headers
-const baseURL = process.env.REACT_APP_API_URL || process.env.VITE_API_BASE_URL;
+const baseURL = process.env.REACT_APP_API_URL ||
+    process.env.VITE_API_BASE_URL ||
+    'https://api.ragingfire.itsnuve.co/api';
 
 const axiosInstance = axios.create({
     baseURL: baseURL,
@@ -10,6 +12,7 @@ const axiosInstance = axios.create({
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        // 'ngrok-skip-browser-warning': 'true',
     },
 });
 
