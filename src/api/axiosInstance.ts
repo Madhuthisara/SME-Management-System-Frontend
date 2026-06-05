@@ -16,12 +16,10 @@ const axiosInstance = axios.create({
     },
 });
 
-// Add token to every request if it exists
 axiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
 
-        // Validation for valid token format
         if (token && token !== 'null' && token !== 'undefined' && token !== 'true' && token !== 'false') {
             config.headers.Authorization = `Bearer ${token}`;
             console.log(`[Axios] Added valid JWT token to request: ${config.url}`);
