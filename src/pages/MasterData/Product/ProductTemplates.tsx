@@ -8,6 +8,7 @@ import { profileService } from '../../../api/services/profileService';
 import { materialService } from '../../../api/services/materialService';
 import { productTemplateService } from '../../../api/services/productTemplateService';
 import { ProductTemplate, BOMItem } from '../../../types/productTemplate';
+import { ensureArray } from '../../../utils/dataUtils';
 
 const { Text, Title } = Typography;
 const { Option } = Select;
@@ -33,7 +34,7 @@ const ProductTemplates: React.FC = () => {
         enabled: !!businessId,
     });
 
-    const templates = templatesResponse?.output?.values || [];
+    const templates = ensureArray<ProductTemplate>(templatesResponse?.values);
 
     // Load available materials for selection
     const { data: materialsResponse, isLoading: isMaterialsLoading } = useQuery({
@@ -42,7 +43,7 @@ const ProductTemplates: React.FC = () => {
         enabled: !!businessId,
     });
 
-    const materials = materialsResponse?.output?.values || [];
+    const materials = ensureArray<any>(materialsResponse?.values);
 
     // CRUD Mutations
     const createMutation = useMutation({

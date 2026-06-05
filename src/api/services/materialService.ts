@@ -1,31 +1,29 @@
-import { AxiosRequestConfig } from 'axios';
 import axiosInstance from '../axiosInstance';
 import { API_ENDPOINTS } from '../endpoints';
-import {
-    MaterialResponse,
-    MaterialsListResponse,
-    CreateMaterialPayload,
-    UpdateMaterialPayload
-} from '../../types/material';
+import { CreateMaterialPayload, UpdateMaterialPayload } from '../../types/material';
 
 export const materialService = {
-    getAllMaterials: async (businessId: string, page: number = 1, perPage: number = 15, config?: AxiosRequestConfig): Promise<MaterialsListResponse> => {
-        const response = await axiosInstance.get(`${API_ENDPOINTS.MATERIALS.ALL}?business_id=${businessId}&page=${page}&per_page=${perPage}`, config);
+    getAllMaterials: async (businessId: string, page: number = 1, perPage: number = 100) => {
+        const response = await axiosInstance.get(API_ENDPOINTS.MATERIALS.ALL, {
+            params: { business_id: businessId, page, per_page: perPage }
+        });
+        return response.data.output || response.data.data;
+    },
+
+    createMaterial: async (data: CreateMaterialPayload) => {
+        const response = await axiosInstance.post(API_ENDPOINTS.MATERIALS.CREATE, data);
         return response.data;
     },
 
-    createMaterial: async (payload: CreateMaterialPayload, config?: AxiosRequestConfig): Promise<MaterialResponse> => {
-        const response = await axiosInstance.post(API_ENDPOINTS.MATERIALS.CREATE, payload, config);
+    updateMaterial: async (data: UpdateMaterialPayload) => {
+        const response = await axiosInstance.put(API_ENDPOINTS.MATERIALS.UPDATE, data);
         return response.data;
     },
 
-    updateMaterial: async (payload: UpdateMaterialPayload, config?: AxiosRequestConfig): Promise<MaterialResponse> => {
-        const response = await axiosInstance.put(API_ENDPOINTS.MATERIALS.UPDATE, payload, config);
+    deleteMaterial: async (id: string) => {
+        const response = await axiosInstance.delete(API_ENDPOINTS.MATERIALS.DELETE, {
+            params: { id }
+        });
         return response.data;
-    },
-
-    deleteMaterial: async (id: string, config?: AxiosRequestConfig): Promise<{ success: boolean; message: string; output: any[] }> => {
-        const response = await axiosInstance.delete(`${API_ENDPOINTS.MATERIALS.DELETE}?id=${id}`, config);
-        return response.data;
-    },
+    }
 };

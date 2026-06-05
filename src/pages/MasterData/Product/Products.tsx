@@ -14,6 +14,7 @@ import { productService } from '../../../api/services/productService';
 import { categoryService } from '../../../api/services/categoryService';
 import { productTemplateService } from '../../../api/services/productTemplateService';
 import { Product } from '../../../types/product';
+import { ensureArray } from '../../../utils/dataUtils';
 
 const { Text, Title } = Typography;
 const { Option } = Select;
@@ -127,10 +128,10 @@ const Products: React.FC = () => {
         enabled: !!businessId,
     });
 
-    const products = productsResponse?.output?.values || [];
-    const totalProducts = productsResponse?.output?.total_records || 0;
-    const categories = categoriesResponse?.output?.values || [];
-    const templates = templatesResponse?.output?.values || [];
+    const products = ensureArray<Product>(productsResponse?.values);
+    const totalProducts = (productsResponse as any)?.total_records || 0;
+    const categories = ensureArray<any>(categoriesResponse?.values);
+    const templates = ensureArray<any>(templatesResponse?.values);
 
     // Group products by category
     const productsByCategory: GroupedCategory[] = categories.map((cat: any) => ({
@@ -235,16 +236,23 @@ const Products: React.FC = () => {
     const handleOk = () => {
         form.validateFields().then((values) => {
             if (businessId) {
-                // Extract URLs from fileList
-                const thumbnail_url = values.thumbnail_url?.[0]?.url || values.thumbnail_url?.[0]?.response;
+                // Extract URLs correctly: for newly uploaded files, AntD stores our URL string in `response`.
+                // For existing files (in edit mode), the URL is in `url`.
+                const extractUrl = (file: any) => {
+                    if (!file) return null;
+                    if (file.response) return file.response;
+                    if (file.url && !file.url.startsWith('blob:')) return file.url;
+                    return null;
+                };
 
-                const gallery = values.gallery?.map((file: any) => file.url || file.response).filter(Boolean) || [];
+                const thumbnail_url = extractUrl(values.thumbnail_url?.[0]);
+                const gallery = values.gallery?.map(extractUrl).filter(Boolean) || [];
 
                 const payload = {
                     ...values,
                     business_id: businessId,
                     discount: values.discount || 0,
-                    thumbnail_url: thumbnail_url || null,
+                    thumbnail_url: thumbnail_url,
                     gallery: gallery
                 };
 

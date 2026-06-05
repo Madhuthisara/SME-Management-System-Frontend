@@ -8,6 +8,7 @@ import { attributeService } from '../../../api/services/attributeService';
 import { profileService } from '../../../api/services/profileService';
 import { Attribute, CreateAttributePayload, UpdateAttributePayload } from '../../../types/attribute';
 import AttributeOptionsModal from './components/AttributeOptionsModal';
+import { ensureArray } from '../../../utils/dataUtils';
 
 const { Text, Title } = Typography;
 
@@ -34,7 +35,7 @@ const MaterialAttributes: React.FC = () => {
         enabled: !!businessId,
     });
 
-    const attributes = attributesResponse?.output?.values || [];
+    const attributes = ensureArray<Attribute>(attributesResponse?.values);
 
     // Save new attribute
     const createMutation = useMutation({
@@ -44,6 +45,9 @@ const MaterialAttributes: React.FC = () => {
             message.success('Attribute created successfully');
             handleCancel();
         },
+        onError: (error: any) => {
+            message.error(error.response?.data?.message || 'Failed to create attribute');
+        }
     });
 
     // Update existing attribute
@@ -54,6 +58,9 @@ const MaterialAttributes: React.FC = () => {
             message.success('Attribute updated successfully');
             handleCancel();
         },
+        onError: (error: any) => {
+            message.error(error.response?.data?.message || 'Failed to update attribute');
+        }
     });
 
     // Delete an attribute
@@ -63,6 +70,9 @@ const MaterialAttributes: React.FC = () => {
             queryClient.invalidateQueries({ queryKey: ['attributes', businessId] });
             message.success('Attribute deleted successfully');
         },
+        onError: (error: any) => {
+            message.error(error.response?.data?.message || 'Failed to delete attribute');
+        }
     });
 
     const handleAdd = () => {
@@ -231,7 +241,7 @@ const MaterialAttributes: React.FC = () => {
                     <Table
                         columns={columns}
                         dataSource={attributes}
-                        rowKey="attribute_id"
+                        rowKey={(record) => record.attribute_id || (record as any).id || (record as any).option_id || Math.random().toString()}
                         pagination={false}
                     />
                 )}
