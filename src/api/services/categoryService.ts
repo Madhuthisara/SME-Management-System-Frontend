@@ -6,17 +6,17 @@ export const categoryService = {
         const response = await axiosInstance.get(API_ENDPOINTS.CATEGORIES.ALL, {
             params: { business_id: businessId, page, per_page: perPage }
         });
-        return response.data;
+        return response.data.output || response.data.data;
     },
 
     createCategory: async (data: { business_id: string; name: string }) => {
         const response = await axiosInstance.post(API_ENDPOINTS.CATEGORIES.CREATE, data);
-        return response.data;
+        return response.data.output || response.data.data;
     },
 
     updateCategory: async (data: { id: string; name: string }) => {
         const response = await axiosInstance.put(API_ENDPOINTS.CATEGORIES.UPDATE, data);
-        return response.data;
+        return response.data.output || response.data.data;
     },
 
     deleteCategory: async (id: string) => {

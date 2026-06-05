@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { attributeService } from '../../../../api/services/attributeService';
 import { Attribute, AttributeOption, CreateAttributeOptionPayload, UpdateAttributeOptionPayload } from '../../../../types/attribute';
 import type { ColumnsType } from 'antd/es/table';
+import { extractPaginatedData } from '../../../../utils/dataUtils';
 
 const { Text } = Typography;
 
@@ -29,7 +30,7 @@ const AttributeOptionsModal: React.FC<AttributeOptionsModalProps> = ({ attribute
         enabled: !!attributeId && open,
     });
 
-    const options = optionsResponse?.output || [];
+    const options = extractPaginatedData<AttributeOption>(optionsResponse);
 
     // Create Mutation
     const createMutation = useMutation({

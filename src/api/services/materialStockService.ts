@@ -1,31 +1,28 @@
-import { AxiosRequestConfig } from 'axios';
 import axiosInstance from '../axiosInstance';
 import { API_ENDPOINTS } from '../endpoints';
-import {
-    MaterialStockResponse,
-    MaterialStocksListResponse,
-    CreateMaterialStockPayload,
-    UpdateMaterialStockPayload
-} from '../../types/materialStock';
 
 export const materialStockService = {
-    getAllMaterialStocks: async (businessId: string, page: number = 1, perPage: number = 15, config?: AxiosRequestConfig): Promise<MaterialStocksListResponse> => {
-        const response = await axiosInstance.get(`${API_ENDPOINTS.MATERIAL_STOCKS.ALL}?business_id=${businessId}&page=${page}&per_page=${perPage}`, config);
+    getAllMaterialStocks: async (businessId: string, page: number = 1, perPage: number = 100) => {
+        const response = await axiosInstance.get(API_ENDPOINTS.MATERIAL_STOCKS.ALL, {
+            params: { business_id: businessId, page, per_page: perPage }
+        });
+        return response.data.output || response.data.data;
+    },
+
+    createMaterialStock: async (data: any) => {
+        const response = await axiosInstance.post(API_ENDPOINTS.MATERIAL_STOCKS.CREATE, data);
         return response.data;
     },
 
-    createMaterialStock: async (payload: CreateMaterialStockPayload, config?: AxiosRequestConfig): Promise<MaterialStockResponse> => {
-        const response = await axiosInstance.post(API_ENDPOINTS.MATERIAL_STOCKS.CREATE, payload, config);
+    updateMaterialStock: async (data: any) => {
+        const response = await axiosInstance.put(API_ENDPOINTS.MATERIAL_STOCKS.UPDATE, data);
         return response.data;
     },
 
-    updateMaterialStock: async (payload: UpdateMaterialStockPayload, config?: AxiosRequestConfig): Promise<MaterialStockResponse> => {
-        const response = await axiosInstance.put(API_ENDPOINTS.MATERIAL_STOCKS.UPDATE, payload, config);
+    deleteMaterialStock: async (id: string) => {
+        const response = await axiosInstance.delete(API_ENDPOINTS.MATERIAL_STOCKS.DELETE, {
+            params: { id }
+        });
         return response.data;
-    },
-
-    deleteMaterialStock: async (stockId: string, config?: AxiosRequestConfig): Promise<{ success: boolean; message: string; output: any[] }> => {
-        const response = await axiosInstance.delete(`${API_ENDPOINTS.MATERIAL_STOCKS.DELETE}?stock_id=${stockId}`, config);
-        return response.data;
-    },
+    }
 };

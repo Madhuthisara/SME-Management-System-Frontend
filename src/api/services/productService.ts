@@ -1,54 +1,61 @@
-import { AxiosRequestConfig } from 'axios';
 import axiosInstance from '../axiosInstance';
 import { API_ENDPOINTS } from '../endpoints';
-import {
-    ProductsListResponse,
-    ProductResponse,
-    CreateProductPayload,
-    UpdateProductPayload
-} from '../../types/product';
 
 export const productService = {
-    getAllProducts: async (businessId: string, page: number = 1, perPage: number = 15, config?: AxiosRequestConfig): Promise<ProductsListResponse> => {
-        const response = await axiosInstance.get(`${API_ENDPOINTS.PRODUCTS.ALL}?business_id=${businessId}&page=${page}&per_page=${perPage}`, config);
+    getAllProducts: async (businessId: string, page: number = 1, perPage: number = 100) => {
+        const response = await axiosInstance.get(API_ENDPOINTS.PRODUCTS.ALL, {
+            params: { business_id: businessId, page, per_page: perPage }
+        });
+        return response.data.output || response.data.data;
+    },
+
+    createProduct: async (data: any) => {
+        const response = await axiosInstance.post(API_ENDPOINTS.PRODUCTS.CREATE, data);
         return response.data;
     },
 
-    uploadImage: async (file: File, config?: AxiosRequestConfig): Promise<{ success: boolean; url: string; message: string }> => {
-        const formData = new FormData();
-        formData.append('image', file);
-        const response = await axiosInstance.post('/media/upload', formData, {
-            ...config,
-            headers: {
-                ...config?.headers,
-                'Content-Type': 'multipart/form-data',
-            },
+    updateProduct: async (id: string, data: any) => {
+        const response = await axiosInstance.put(API_ENDPOINTS.PRODUCTS.UPDATE, data, {
+            params: { id }
         });
         return response.data;
     },
 
-    createProduct: async (payload: CreateProductPayload, config?: AxiosRequestConfig): Promise<ProductResponse> => {
-        const response = await axiosInstance.post(API_ENDPOINTS.PRODUCTS.CREATE, payload, config);
+    deleteProduct: async (id: string) => {
+        const response = await axiosInstance.delete(API_ENDPOINTS.PRODUCTS.DELETE, {
+            params: { id }
+        });
         return response.data;
     },
 
-    updateProduct: async (id: string, payload: UpdateProductPayload, config?: AxiosRequestConfig): Promise<ProductResponse> => {
-        const response = await axiosInstance.put(`${API_ENDPOINTS.PRODUCTS.UPDATE}?id=${id}`, payload, config);
-        return response.data;
+    getProductVariants: async (id: string) => {
+        const response = await axiosInstance.get(API_ENDPOINTS.PRODUCTS.VARIANTS(id));
+        return response.data.output || response.data.data;
     },
 
-    deleteProduct: async (id: string, config?: AxiosRequestConfig): Promise<{ success: boolean; message: string }> => {
-        const response = await axiosInstance.delete(`${API_ENDPOINTS.PRODUCTS.DELETE}?id=${id}`, config);
-        return response.data;
+    getRequiredAttributes: async (id: string) => {
+        const response = await axiosInstance.get(API_ENDPOINTS.PRODUCTS.REQUIRED_ATTRIBUTES(id));
+        return response.data.output || response.data.data;
     },
 
-    getVariants: async (id: string, config?: AxiosRequestConfig): Promise<{ success: boolean; output: any[] }> => {
-        const response = await axiosInstance.get((API_ENDPOINTS.PRODUCTS.VARIANTS as any)(id), config);
-        return response.data;
-    },
-
-    getRequiredAttributes: async (id: string, config?: AxiosRequestConfig): Promise<{ success: boolean; output: any[] }> => {
-        const response = await axiosInstance.get((API_ENDPOINTS.PRODUCTS.REQUIRED_ATTRIBUTES as any)(id), config);
-        return response.data;
-    },
+    uploadImage: async (file: File) => {
+        const formData = new FormData();
+        formData.append('image', file);
+        try {
+            const response = await axiosInstance.post(API_ENDPOINTS.MEDIA.UPLOAD, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            return {
+                success: true,
+                url: response.data.url || response.data.data?.url || response.data.output?.url,
+            };
+        } catch (error: any) {
+            return {
+                success: false,
+                message: error.response?.data?.message || 'Failed to upload image',
+            };
+        }
+    }
 };

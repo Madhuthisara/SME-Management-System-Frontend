@@ -9,6 +9,7 @@ import { productStockService } from '../../../api/services/productStockService';
 import { materialStockService } from '../../../api/services/materialStockService';
 import { productService } from '../../../api/services/productService';
 import { ProductStock } from '../../../types/productStock';
+import { ensureArray } from '../../../utils/dataUtils';
 
 const { Text, Title } = Typography;
 const { Option } = Select;
@@ -47,9 +48,9 @@ const ProductStocks: React.FC = () => {
         enabled: !!businessId,
     });
 
-    const stocks = stocksResponse?.output?.values || [];
-    const products = productsResponse?.output?.values || [];
-    const materialStocks = materialStocksResponse?.output?.values || [];
+    const stocks = ensureArray<ProductStock>(stocksResponse?.values);
+    const products = ensureArray<any>(productsResponse?.values);
+    const materialStocks = ensureArray<any>(materialStocksResponse?.values);
 
     // Watchers
     const selectedProductId = Form.useWatch('product_id', form);
@@ -120,9 +121,8 @@ const ProductStocks: React.FC = () => {
         });
         try {
             const response = await productService.getRequiredAttributes(productId);
-            if (response.success) {
-                setProductAttributes(response.output);
-            }
+            const attributes = ensureArray(response);
+            setProductAttributes(attributes);
         } catch (error) {
             console.error('Failed to fetch required attributes:', error);
         } finally {

@@ -16,22 +16,22 @@ export interface SuppliersListResponse {
 }
 
 export const supplierService = {
-    getAllSuppliers: async (businessId: string, page: number = 1, perPage: number = 15, config?: AxiosRequestConfig): Promise<SuppliersListResponse> => {
+    getAllSuppliers: async (businessId: string, page: number = 1, perPage: number = 15, config?: AxiosRequestConfig): Promise<PaginatedData<Supplier>> => {
         const response = await axiosInstance.get(`/suppliers/all?business_id=${businessId}&page=${page}&per_page=${perPage}`, config);
-        return response.data;
+        return response.data.output || response.data.data;
     },
 
-    createSupplier: async (payload: CreateSupplierPayload, config?: AxiosRequestConfig): Promise<SupplierResponse> => {
+    createSupplier: async (payload: CreateSupplierPayload, config?: AxiosRequestConfig): Promise<Supplier> => {
         const response = await axiosInstance.post('/suppliers/create', payload, config);
-        return response.data;
+        return response.data.output || response.data.data;
     },
 
-    updateSupplier: async (payload: UpdateSupplierPayload, config?: AxiosRequestConfig): Promise<SupplierResponse> => {
+    updateSupplier: async (payload: UpdateSupplierPayload, config?: AxiosRequestConfig): Promise<Supplier> => {
         const response = await axiosInstance.put(`/suppliers/update?id=${payload.id}`, payload, config);
-        return response.data;
+        return response.data.output || response.data.data;
     },
 
-    deleteSupplier: async (supplierId: string, config?: AxiosRequestConfig): Promise<{ success: boolean; message: string; output: any[] }> => {
+    deleteSupplier: async (supplierId: string, config?: AxiosRequestConfig): Promise<any> => {
         const response = await axiosInstance.delete(`/suppliers/delete?id=${supplierId}`, config);
         return response.data;
     }

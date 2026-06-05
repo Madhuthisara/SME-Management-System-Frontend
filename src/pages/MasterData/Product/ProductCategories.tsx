@@ -7,6 +7,7 @@ import MasterDataSubPageLayout from '../../../components/common/MasterDataSubPag
 import { categoryService } from '../../../api/services/categoryService';
 import { profileService } from '../../../api/services/profileService';
 import { Category, CreateCategoryPayload, UpdateCategoryPayload } from '../../../types/category';
+import { ensureArray } from '../../../utils/dataUtils';
 
 const { Text, Title } = Typography;
 
@@ -33,7 +34,7 @@ const ProductCategories: React.FC = () => {
         enabled: !!businessId,
     });
 
-    const categories = categoriesResponse?.output?.values || [];
+    const categories = ensureArray<Category>(categoriesResponse?.values);
 
     // Save new category
     const createMutation = useMutation({
@@ -173,7 +174,7 @@ const ProductCategories: React.FC = () => {
                     pagination={{
                         current: page,
                         pageSize: pageSize,
-                        total: categoriesResponse?.output?.total_records || 0,
+                        total: (categoriesResponse as any)?.total_records || 0,
                         onChange: (newPage, newPageSize) => {
                             setPage(newPage);
                             setPageSize(newPageSize);

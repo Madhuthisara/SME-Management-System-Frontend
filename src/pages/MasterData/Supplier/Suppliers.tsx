@@ -6,6 +6,7 @@ import { supplierService } from '../../../api/services/supplierService';
 import { profileService } from '../../../api/services/profileService';
 import { Supplier, CreateSupplierPayload, UpdateSupplierPayload } from '../../../types/supplier';
 import { ColumnsType } from 'antd/es/table';
+import { ensureArray } from '../../../utils/dataUtils';
 
 const { Title, Text } = Typography;
 
@@ -156,7 +157,7 @@ const SuppliersPage: React.FC = () => {
 
     return (
         <Layout className="bg-transparent h-full max-h-screen custom-scrollbar p-6">
-            <Row justify="space-between" align="middle" className="mb-6">
+            <Row justify="space-between" align="middle" className="mb-4">
                 <Col>
                     <Title level={2} className="m-0 text-navy-800">
                         Suppliers
@@ -175,14 +176,14 @@ const SuppliersPage: React.FC = () => {
             <Card className="shadow-sm border-gray-200">
                 <Table
                     columns={columns}
-                    dataSource={suppliersResponse?.output?.values || []}
+                    dataSource={ensureArray<Supplier>(suppliersResponse?.values)}
                     rowKey={(record) => record.supplier_id || record.id || Math.random().toString()}
                     loading={isLoading || deleteMutation.isPending}
                     className="custom-table"
                     pagination={{
                         current: page,
                         pageSize: pageSize,
-                        total: suppliersResponse?.output?.total_records || 0,
+                        total: (suppliersResponse as any)?.total_records || 0,
                         onChange: (newPage, newPageSize) => {
                             setPage(newPage);
                             setPageSize(newPageSize);

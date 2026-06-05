@@ -8,6 +8,7 @@ import { attributeService } from '../../../api/services/attributeService';
 import { profileService } from '../../../api/services/profileService';
 import { materialService } from '../../../api/services/materialService';
 import { Material, CreateMaterialPayload, UpdateMaterialPayload, MaterialAttribute } from '../../../types/material';
+import { ensureArray } from '../../../utils/dataUtils';
 
 const { Text, Title } = Typography;
 
@@ -32,7 +33,7 @@ const Materials: React.FC = () => {
         enabled: !!businessId,
     });
 
-    const materials = materialsResponse?.output?.values || [];
+    const materials = ensureArray<Material>(materialsResponse?.values);
 
     // Load available attributes for selection
     const { data: attributesResponse, isLoading: isAttributesLoading } = useQuery({
@@ -41,7 +42,7 @@ const Materials: React.FC = () => {
         enabled: !!businessId,
     });
 
-    const attributeOptions = attributesResponse?.output?.values?.map(attr => ({
+    const attributeOptions = ensureArray<any>(attributesResponse?.values)?.map(attr => ({
         label: attr.name,
         value: attr.attribute_id,
     })) || [];
